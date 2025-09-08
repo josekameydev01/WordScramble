@@ -10,8 +10,10 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         List {
+            Text("Static row 1")
+            Text("Static row 2")
             ForEach(0..<5) {
-                Text("Row \($0)")
+                Text("Dynamic row \($0)")
             }
         }
     }
