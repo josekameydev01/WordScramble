@@ -8,30 +8,43 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var alertTitle = "Error"
-    @State private var alertMessage = "The file cannot be found"
-    @State private var showAlert = false
+    @State private var usedWords = [String]()
+    @State private var rootWord = ""
+    @State private var newWord = ""
     
     var body: some View {
-        VStack {
-            Button("Show Message", action: showMessage)
-                .buttonStyle(.borderedProminent)
-        }
-        .alert(alertTitle, isPresented: $showAlert) {
-            Button("OK") { }
-        } message: {
-            Text(alertMessage)
+        NavigationStack {
+            List {
+                Section {
+                    TextField("Enter your word", text: $newWord)
+                        .textInputAutocapitalization(.never)
+                }
+                
+                Section {
+                    ForEach(usedWords, id: \.self) { word in
+                        HStack {
+                            Image(systemName: "\(word.count).circle")
+                            Text(word)
+                        }
+                    }
+                }
+            }
+            .navigationTitle(rootWord)
+            .onSubmit(addNewWord)
         }
     }
-    private func showMessage() {
-        showAlert = true
-        guard let fileURL = Bundle.main.url(forResource: "file", withExtension: "txt") else {
-            return
+    private func addNewWord() {
+        let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard answer.count > 0 else { return }
+        
+        withAnimation {
+            usedWords.insert(answer, at: 0)
         }
         
-        alertTitle = "file content"
-        alertMessage = (try? String(contentsOf: fileURL, encoding: .utf8)) ?? "The file couldn't be read"
+        newWord = ""
     }
+    
 }
 
 #Preview {
