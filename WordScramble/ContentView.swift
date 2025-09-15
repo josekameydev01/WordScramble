@@ -47,15 +47,12 @@ struct ContentView: View {
     }
     
     private func startGame() {
-        if let fileURL = Bundle.main.url(forResource: "start", withExtension: ".txt") {
-            if let fileContent = try? String(contentsOf: fileURL, encoding: .utf8) {
-                let words = fileContent.components(separatedBy: "\n")
-                rootWord = words.randomElement() ?? "aardvark"
-                return
-            }
-    
+        guard let fileURL = Bundle.main.url(forResource: "start", withExtension: "txt"),
+        let fileContent = try? String(contentsOf: fileURL, encoding: .utf8) else {
+            fatalError("Could not load start.txt from bundle.")
         }
-        fatalError("Could not load start.txt from bundle")
+        let words = fileContent.components(separatedBy: .newlines)
+        rootWord = words.randomElement() ?? "silkworm"
     }
     
 }
