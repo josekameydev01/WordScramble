@@ -15,6 +15,15 @@ struct ContentView: View {
     @State private var errorMessage = ""
     @State private var showingError = false
     
+    private var score: Int {
+        var currentScore = 0
+        for word in usedWords {
+            currentScore += word.count
+        }
+        currentScore += usedWords.count
+        return currentScore
+    }
+    
     var body: some View {
         NavigationStack {
             List {
@@ -36,7 +45,13 @@ struct ContentView: View {
             .onSubmit(addNewWord)
             .onAppear(perform: startGame)
             .toolbar {
-                Button("Restart") { restartGame() }
+                ToolbarItem(placement: .topBarLeading) {
+                    Text("Score: \(score)")
+                        .font(.headline)
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Restart") { restartGame() }
+                }
             }
             .alert(errorTitle, isPresented: $showingError) { } message: {
                 Text(errorMessage)
