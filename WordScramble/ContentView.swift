@@ -35,6 +35,9 @@ struct ContentView: View {
             .navigationTitle(rootWord)
             .onSubmit(addNewWord)
             .onAppear(perform: startGame)
+            .toolbar {
+                Button("Restart") { restartGame() }
+            }
             .alert(errorTitle, isPresented: $showingError) { } message: {
                 Text(errorMessage)
             }
@@ -110,6 +113,11 @@ struct ContentView: View {
         errorTitle = title
         errorMessage = message
         showingError = true
+    }
+    private func restartGame() {
+        startGame()
+        usedWords.removeAll()
+        newWord = ""
     }
 }
 
